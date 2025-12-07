@@ -26,3 +26,4 @@ replay_pid*
 src/main/.DS_Store
 target/classes/target/
 ytdlp
+.DS_Store

@@ -20,21 +20,28 @@ public class DependencyDownloader {
         this.dependencyMapHelper = new DependencyMapHelper();
     }
 
+    public void checkDependencies() throws Exception {
+        // if dependency doesnt exists
+        downloadDependencies();
+    }
+
     public boolean downloadDependencies() throws Exception{
         boolean ret = false;
         System.out.println("Downloading Dependencies...");
         System.out.println("Detected OS: " + osDetector.getCurrentOS().name());
         String urlYtdlp = dependencyMapHelper.getURL(osDetector.getCurrentOS(), DEPENDENCY.YT_DLP);
         System.out.println("Downloading YT-DLP...");
-        InputStream in = new URL(urlYtdlp).openStream();
-        ReadableByteChannel readableByteChannel = Channels.newChannel(in);
-        FileOutputStream fileOutputStream = new FileOutputStream("ytdlp" + (osDetector.getCurrentOS().equals(OSDetector.OS.WIN) ? ".exe" : ""));
-        FileChannel fileChannel = fileOutputStream.getChannel();
-        fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+        downloadFile(urlYtdlp, "ytdlp" + (osDetector.getCurrentOS().equals(OSDetector.OS.WIN) ? ".exe" : ""));
         System.out.println("YT-DLP download completed.");
 
         return ret;
     }
 
-
+    private void downloadFile(String url, String filename) throws Exception{
+        InputStream in = new URL(url).openStream();
+        ReadableByteChannel readableByteChannel = Channels.newChannel(in);
+        FileOutputStream fileOutputStream = new FileOutputStream(filename);
+        FileChannel fileChannel = fileOutputStream.getChannel();
+        fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+    }
 }
